@@ -53,6 +53,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
+
+    const [isLogin, setIsLogin] = React.useState(true);
+
+
+    React.useEffect(() => {
+        if (localStorage.getItem("jwt") === null) setIsLogin(false)
+    }, []);
+
+    const buttonText = isLogin ? <a style={{ textDecoration: 'none' }} href='/'>Log Out</a> : <a style={{ textDecoration: 'none' }} href='/signin'>Log In</a>;
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -72,13 +82,19 @@ export default function PrimarySearchAppBar() {
         handleMobileMenuClose();
     };
 
+    function handleMenuProfile() {
+        console.log("dadas");
+        handleMenuClose();
+    }
+
+    function handleMenuLogout() {
+        handleMenuClose();
+        localStorage.clear();
+    }
+
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
-
-    const handleClickHome = () => {
-        console.log("redirect home!");
-    }
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -97,8 +113,8 @@ export default function PrimarySearchAppBar() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+            {isLogin && <MenuItem onClick={handleMenuProfile}><a style={{ textDecoration: 'none' }} href='/profile'>Profile</a></MenuItem>}
+            <MenuItem href='/signup' onClick={handleMenuLogout}>{buttonText}</MenuItem>
         </Menu>
     );
 
@@ -127,7 +143,7 @@ export default function PrimarySearchAppBar() {
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
                 <Toolbar sx={{cursor: 'pointer'}}>
-                    <FastfoodIcon onClick={()=>handleClickHome()}/>
+                    <IconButton href='/'><FastfoodIcon/></IconButton>
                     <Search sx={{flexGrow: 10}}>
                         <SearchIconWrapper>
                             <SearchIcon />

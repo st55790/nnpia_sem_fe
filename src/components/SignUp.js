@@ -7,19 +7,54 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import axiosInstance from '../axiosInstance/AxiosInstance';
+import { Alert } from "@mui/material";
+import { useState } from "react";
 
 export default function SignUp() {
-    const handleSubmit = (event) => {
+
+    const [showAlert, setShowAlert] = useState(false);
+
+    function handleSubmit(event){
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+        if (data.get("password") !== data.get("password_control")){
+            setShowAlert(true);
+            return;
+        }
         console.log({
+            username: data.get("username"),
             email: data.get("email"),
             password: data.get("password"),
         });
+
+        axiosInstance.get('/test/all')
+            .then(response =>{
+                console.log(response.data);
+            })
+            .catch(error => {
+
+            });
+
+        axiosInstance.post('/auth/signup', {
+            username: data.get("username"),
+            email: data.get("email"),
+            role: ["user"],
+            password: data.get("password")
+            })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(console.error());
+            })
+        
+            setShowAlert(false);
     };
 
     return (
         <Container component="main" maxWidth="sm">
+            
             <Box
                 sx={{
                     boxShadow: 3,
@@ -36,6 +71,7 @@ export default function SignUp() {
                     Sign up
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    {showAlert && <Alert id="alert" margin="normal" severity="warning">This is a warning alert — check it out!</Alert>}
                     <TextField
                         margin="normal"
                         required
@@ -70,10 +106,10 @@ export default function SignUp() {
                         margin="normal"
                         required
                         fullWidth
-                        name="password_again"
+                        name="password_control"
                         label="Password"
                         type="password"
-                        id="password_again"
+                        id="password_control"
                         autoComplete="new-password"
                     />
                     <Button
@@ -86,7 +122,7 @@ export default function SignUp() {
                     </Button>
                     <Grid container>
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link href="/signin" variant="body2">
                                 {"If you have an account? Sign In"}
                             </Link>
                         </Grid>

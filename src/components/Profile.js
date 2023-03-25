@@ -1,4 +1,4 @@
-import { Grid, IconButton, List, ListItem, Typography } from "@mui/material";
+import { Button, Grid, IconButton, List, ListItem, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import * as React from 'react';
 import { styled } from '@mui/material/styles'
@@ -40,9 +40,10 @@ export default function Profile() {
 
     return (
         <Container component="main" sx={{padding: '50px'}}>
+            <Button href="/addRecipe" variant="outlined" sx={{my: '1em'}} fullWidth>ADD NEW RECIPE</Button>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={6} onClick={()=>handleCreateRecipe()}>
-                    <Item onClick={() => handleCreateRecipe()} sx={{ background: '#3b8ad9', cursor: 'pointer' }}>
+                    <Item sx={{ background: '#3b8ad9', cursor: 'pointer' }}>
                         <Typography>Moje recepty</Typography>
                     </Item>
                 </Grid>
@@ -59,7 +60,7 @@ export default function Profile() {
                                     <ListItem
                                         secondaryAction={
                                             <Container>
-                                                <IconButton>
+                                                <IconButton href="/recipe">
                                                     <VisibilityIcon/>
                                                 </IconButton>
                                                 <IconButton edge="end">
@@ -85,8 +86,8 @@ export default function Profile() {
                                 {generate(
                                     <ListItem
                                         secondaryAction={
-                                            <Container justifyContent="end" sx={{justifyContent: 'space-between'}}>
-                                                <IconButton>
+                                            <Container>
+                                                <IconButton href="/recipe">
                                                     <VisibilityIcon />
                                                 </IconButton>
                                                 <IconButton edge="end">

@@ -7,15 +7,26 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import axiosInstance from "../axiosInstance/AxiosInstance"
 
 export default function SignIn() {
     const handleSubmit = (event) => {
+
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get("email"),
-            password: data.get("password"),
-        });
+
+        axiosInstance.post("/auth/signin", {
+            username: data.get("username"),
+            password: data.get("password")
+            })
+            .then(result =>{
+                console.log(result);
+                localStorage.setItem("jwt", "Bearer " + result.data.token)
+                localStorage.setItem("userId", result.data.id);
+                window.location.replace("/");
+            }).catch(error => {
+                console.log(error);
+            });
     };
 
     return (
@@ -40,10 +51,10 @@ export default function SignIn() {
                         margin="normal"
                         required
                         fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
+                        id="username"
+                        label="Username"
+                        name="username"
+                        autoComplete="username"
                         autoFocus
                     />
                     <TextField
@@ -71,7 +82,7 @@ export default function SignIn() {
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link href="/signup" variant="body2">
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>
