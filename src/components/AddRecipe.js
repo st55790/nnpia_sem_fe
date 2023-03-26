@@ -42,24 +42,29 @@ export default function AddRecipe() {
         const data = new FormData(event.currentTarget); 
         const token = localStorage.getItem("jwt");
 
+        const selectedFile = document.getElementById("uploadFile").files[0];
+        console.log(selectedFile.name);
+
         axiosInstance.post("/recipe", {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMTIzIiwiaWF0IjoxNjc5NzgwNDcwLCJleHAiOjE2Nzk4NjY4NzB9.80-nfVHOrZrTUc3jjN9w9HDzpXzP9MMnan175TEghCSr5txeOfEaVU-vZCjUT6szTSU0wmXsThUIW4bHgm0Rrg'
-            },
-            data: {
                 name: data.get("recipeName"),
                 description: data.get("description"),
                 procedure: data.get("process"),
                 prepareTime: data.get("prepareTime"),
                 numberOfPortions: data.get("numberOfPortion"),
                 rating: 0,
-                owner: 1,
+                owner: localStorage.getItem("userId"),
                 linksToImages: [],
-                ingredients: [],
-                categories: []
-            }
+                ingredients: selectedIngredients,
+                categories: selectedCategories
+            },{
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            
+
+            
         }).then(response => {
             // zpracování odpovědi
         }).catch(error => {
@@ -175,8 +180,10 @@ export default function AddRecipe() {
                     />
                     <Input 
                         sx={{my: 2}}
-                        fullWidth type="file">
-                    </Input>
+                        fullWidth type="file"
+                        id="uploadFile"
+                        name="uploadFile"
+                    />
                     <Button
                         type="submit"
                         fullWidth

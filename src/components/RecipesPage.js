@@ -1,9 +1,20 @@
 import { Card, CardContent, CardMedia, Rating, Typography } from "@mui/material";
 import { Container } from "@mui/system";
+import { useEffect, useState } from "react";
+import axiosInstance from "../axiosInstance/AxiosInstance";
+
 
 export default function RecipePage() {
 
-    const recipes = ["banana", "apple", "tomato", "mango", "peach", "pear", "potato", "onion", "garlic", "cinamon"];
+    const [recipes, setRecipes] = useState([]);
+
+    useEffect(() => {
+        axiosInstance.get("/recipe")
+            .then(response => {
+                console.log(response.data);
+                setRecipes(response.data);
+        });
+    }, []);
 
     const handleClickOnRecipe = (event) => {
         console.log(`RECIPE DETAIL-> ${event}`);
@@ -16,12 +27,12 @@ export default function RecipePage() {
                     <Card onClick={()=>handleClickOnRecipe(index)} key={index} sx={{margin: '60px', display: 'flex', cursor: 'pointer'}}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
-                                NAME
+                                {recipe.name}
                             </Typography>
                             <Typography variant="subtitle1" color="text.secondary" component="div">
-                                Description
+                                {recipe.description}
                             </Typography>
-                            <Rating name="read-only" size="large" value={4.2} readOnly />
+                            <Rating name="read-only" size="large" value={recipe.rating} readOnly />
                         </CardContent>
                         <CardMedia
                             component="img"
