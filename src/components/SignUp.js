@@ -44,6 +44,7 @@ export default function SignUp() {
             })
             .then(response => {
                 console.log(response);
+                window.location.replace("/signin");
             })
             .catch(error => {
                 console.log(console.error());

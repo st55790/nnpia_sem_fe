@@ -37,7 +37,7 @@ export default function RecipePage() {
                         <CardMedia
                             component="img"
                             sx={{width: 400}}
-                            image="./img/defaultImage.jpg"
+                            image={recipe["linksToImages"]["0"]}
                         />
                     </Card>
                 ))

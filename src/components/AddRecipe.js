@@ -42,8 +42,19 @@ export default function AddRecipe() {
         const data = new FormData(event.currentTarget); 
         const token = localStorage.getItem("jwt");
 
-        const selectedFile = document.getElementById("uploadFile").files[0];
-        console.log(selectedFile.name);
+        const selectedFile = null;
+        try{
+            selectedFile = document.getElementById("uploadFile").files[0];
+        }catch(error){
+            console.log(error)
+        }
+
+        let filename = './img/';
+        if(selectedFile === null){
+            filename += 'defaultImage.jpg';
+        }else{
+            filename += selectedFile.name;
+        }
 
         axiosInstance.post("/recipe", {
                 name: data.get("recipeName"),
@@ -53,7 +64,7 @@ export default function AddRecipe() {
                 numberOfPortions: data.get("numberOfPortion"),
                 rating: 0,
                 owner: localStorage.getItem("userId"),
-                linksToImages: [],
+                linksToImages: [filename],
                 ingredients: selectedIngredients,
                 categories: selectedCategories
             },{
@@ -178,12 +189,12 @@ export default function AddRecipe() {
                             setSelectedIngredients(newValue);
                         }}
                     />
-                    <Input 
-                        sx={{my: 2}}
-                        fullWidth type="file"
-                        id="uploadFile"
-                        name="uploadFile"
-                    />
+                    <TextField 
+                    fullWidth
+                    id="uploadFile"
+                    name="uploadFile"
+                    type={"file"} 
+                    inputProps={{accept:".jpg, .jpge, .png"}}/>
                     <Button
                         type="submit"
                         fullWidth
