@@ -2,9 +2,12 @@ import { Card, CardContent, CardMedia, Rating, Typography } from "@mui/material"
 import { Container } from "@mui/system";
 import { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance/AxiosInstance";
+import { useNavigate } from "react-router-dom";
 
 
 export default function RecipePage() {
+
+    const navigate = useNavigate();
 
     const [recipes, setRecipes] = useState([]);
 
@@ -16,15 +19,15 @@ export default function RecipePage() {
         });
     }, []);
 
-    const handleClickOnRecipe = (event) => {
-        console.log(`RECIPE DETAIL-> ${event}`);
+    function handleClickOnRecipe(id) {
+        navigate("/recipe/" + id);
     }
 
     return(
         <Container>
             {
                 recipes.map((recipe, index) => (
-                    <Card onClick={()=>handleClickOnRecipe(index)} key={index} sx={{margin: '60px', display: 'flex', cursor: 'pointer'}}>
+                    <Card onClick={()=>handleClickOnRecipe(recipe.id)} key={index} sx={{margin: '60px', display: 'flex', cursor: 'pointer'}}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography component="div" variant="h5">
                                 {recipe.name}

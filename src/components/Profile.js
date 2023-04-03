@@ -6,10 +6,39 @@ import Paper from '@mui/material/Paper';
 import ListItemText from '@mui/material/ListItemText';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { useEffect } from "react";
+import axiosInstance from "../axiosInstance/AxiosInstance";
+import { useState } from "react";
+
 
 
 export default function Profile() {
-    
+
+    const [userRecipes, setUserRecipes] = useState([]);
+    const [userFavorites, setUserFavorites] = useState([]);
+
+    useEffect(() => {
+        const userId = localStorage.getItem("userId");
+        axiosInstance.get("/recipe/owner/" + userId, {
+            headers: {
+                'Authorization': localStorage.getItem("jwt")
+            }
+        }).then(result => {
+            setUserRecipes(result.data);
+        })
+
+        axiosInstance.get("/recipe/favorite/" + userId, {
+            headers: {
+                'Authorization': localStorage.getItem("jwt")
+            }
+        }).then(result => {
+            setUserFavorites(result.data);
+        })
+
+
+
+    }, []);
+
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
         ...theme.typography.body2,
@@ -18,93 +47,98 @@ export default function Profile() {
         color: theme.palette.text.secondary,
     }));
 
-    function generate(element) {
-        return [0, 1, 2, 3].map((value) =>
-            React.cloneElement(element, {
-                key: value,
-            }),
-        );
-    }
-
-    function handleCreateRecipe(params) {
-        console.log("Creeate new recipe");        
-    }
-
-    const Demo = styled('div')(({ theme }) => ({
-        backgroundColor: theme.palette.background.paper,
-    }));
-
-    const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
+
+    function handleDeleteRecipe(recipeId){
+        console.log("DELETE RECIPE " + recipeId);
+
+        axiosInstance.delete(`/recipe/${recipeId}`, {
+            headers: {
+                'Authorization': localStorage.getItem("jwt")
+            }
+        })
+
+        window.location.reload(true);
+    }
+
+    function handleDeleteFavoriteRecipe(recipeId){
+        axiosInstance.delete(`/recipe/${recipeId}/${localStorage.getItem("userId")}`, {
+            headers: {
+                'Authorization': localStorage.getItem("jwt")
+            }
+        })
+
+        window.location.reload(true);
+    }
 
 
     return (
-        <Container component="main" sx={{padding: '50px'}}>
-            <Button href="/addRecipe" variant="outlined" sx={{my: '1em'}} fullWidth>ADD NEW RECIPE</Button>
+        <Container component="main" sx={{ padding: '50px' }}>
+            <Button href="/addRecipe" variant="outlined" sx={{ my: '1em' }} fullWidth>ADD NEW RECIPE</Button>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={6} onClick={()=>handleCreateRecipe()}>
+                <Grid item xs={6}>
                     <Item sx={{ background: '#3b8ad9', cursor: 'pointer' }}>
                         <Typography>Moje recepty</Typography>
                     </Item>
                 </Grid>
                 <Grid item xs={6}>
-                    <Item sx={{background: '#3b8ad9'}}>
+                    <Item sx={{ background: '#3b8ad9' }}>
                         <Typography>Oblíbené recepty</Typography>
                     </Item>
                 </Grid>
                 <Grid item xs={6}>
-                    <Item>
-                        <Demo>
-                            <List dense={dense}>
-                                {generate(
-                                    <ListItem
+                    {userRecipes.length > 0 ? (
+                        <Item>
+                            <List dense={true}>
+                                {userRecipes.map((recipe, index) =>
+                                    <ListItem key={index}
                                         secondaryAction={
                                             <Container>
-                                                <IconButton href="/recipe">
-                                                    <VisibilityIcon/>
-                                                </IconButton>
-                                                <IconButton edge="end">
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                            </Container>
-                                        }
-                                    >
-                                        <ListItemText
-                                            primary="Single-line item"
-                                            secondary={secondary ? 'Secondary text' : null}
-                                        />
-                                    </ListItem>,
-                                )}
-                            </List>
-                        </Demo>
-                    </Item>
-                </Grid>
-                <Grid item xs={6}>
-                    <Item>
-                        <Demo>
-                            <List dense={dense}>
-                                {generate(
-                                    <ListItem
-                                        secondaryAction={
-                                            <Container>
-                                                <IconButton href="/recipe">
+                                                <IconButton href={`/recipe/${recipe.id}`}>
                                                     <VisibilityIcon />
                                                 </IconButton>
-                                                <IconButton edge="end">
+                                                <IconButton edge="end" onClick={() => handleDeleteRecipe(recipe.id)}>
                                                     <DeleteIcon />
                                                 </IconButton>
                                             </Container>
                                         }
                                     >
                                         <ListItemText
-                                            primary="Single-line item"
+                                            primary={`ID: ${recipe.id}: name: ${recipe.name}`}
                                             secondary={secondary ? 'Secondary text' : null}
                                         />
-                                    </ListItem>,
+                                    </ListItem>
                                 )}
                             </List>
-                        </Demo>
-                    </Item>
+                        </Item>
+                    ) : null}
+                </Grid>
+                <Grid item xs={6}>
+                {userFavorites.length > 0 ? (
+                        <Item>
+                            <List dense={true}>
+                                {userFavorites.map((recipe, index) =>
+                                    <ListItem key={index}
+                                        secondaryAction={
+                                            <Container>
+                                                <IconButton href={`/recipe/${recipe.id}`}>
+                                                    <VisibilityIcon />
+                                                </IconButton>
+                                                <IconButton edge="end" onClick={() => handleDeleteFavoriteRecipe(recipe.id)}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Container>
+                                        }
+                                    >
+                                        <ListItemText
+                                            primary={`ID: ${recipe.id}: name: ${recipe.name}`}
+                                            secondary={secondary ? 'Secondary text' : null}
+                                        />
+                                    </ListItem>
+                                )}
+                            </List>
+                        </Item>
+                    ) : null}
                 </Grid>
             </Grid>
         </Container>

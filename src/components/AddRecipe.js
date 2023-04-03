@@ -11,21 +11,13 @@ export default function AddRecipe() {
     const [ingredients, setIngredients] = useState([]);
 
     useEffect(() => {
-        axiosInstance.get("/category", {
-            headers: {
-                'Authorization': localStorage.getItem("jwt")
-            }
-        }).then(response => {
-            console.log(response.data);
+        axiosInstance.get("/category")
+        .then(response => {
             setCategory(response.data);
         });
 
-        axiosInstance.get("/ingredient", {
-            headers: {
-                'Authorization': localStorage.getItem("jwt")
-            }
-        }).then(response => {
-            console.log(response.data);
+        axiosInstance.get("/ingredient")
+        .then(response => {
             setIngredients(response.data);
         });
 
