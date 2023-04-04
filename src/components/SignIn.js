@@ -21,6 +21,7 @@ export default function SignIn() {
             })
             .then(result =>{
                 console.log(result);
+                localStorage.setItem("roles", result.data.roles);
                 localStorage.setItem("jwt", "Bearer " + result.data.token)
                 localStorage.setItem("userId", result.data.id);
                 window.location.replace("/");

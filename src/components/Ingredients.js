@@ -4,6 +4,7 @@ import axiosInstance from "../axiosInstance/AxiosInstance";
 import React from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ReplayIcon from '@mui/icons-material/Replay';
+import EditIcon from '@mui/icons-material/Edit';
 
 
 export default function Ingredients() {
@@ -23,13 +24,24 @@ export default function Ingredients() {
     }, []);
 
     function handleSubmit() {
-        axiosInstance.post("/ingredient", {
-            name: name
-        }, {
-            headers: {
-                'Authorization': localStorage.getItem("jwt")
-            }
-        }).then(window.location.reload(false));
+        if(ingredient === null){
+            axiosInstance.post("/ingredient", {
+                name: name
+            }, {
+                headers: {
+                    'Authorization': localStorage.getItem("jwt")
+                }
+            }).then(window.location.reload(false));
+        }else{
+            axiosInstance.put(`/ingredient/${ingredient.id}`, {
+                id: ingredient.id,
+                name: name
+            }, {
+                headers: {
+                    'Authorization': localStorage.getItem("jwt")
+                }
+            }).then(window.location.reload(false));
+        }
     }
 
     function deleteteIngredient(id) {
@@ -43,6 +55,16 @@ export default function Ingredients() {
     function restoreIngredient(){
         setIngredient(null);
         setName("");
+    }
+
+    function editIngredient(id) {
+        console.log("EDIT INGREDIENT: " + id);
+        axiosInstance.get(`/ingredient/${id}`)
+            .then(result => {
+                console.log(result.data);
+                setIngredient(result.data);
+                setName(result.data.name);
+            });
     }
 
     return (
@@ -89,13 +111,22 @@ export default function Ingredients() {
                     '& ul': { padding: 0 },
                     boxShadow: 2
                 }}
-                subheader={<li />}
+                /*subheader={
+                    <ListSubheader component="div" id="nested-list-subheader">
+                        <TextField
+                            fullWidth
+                        />
+                    </ListSubheader>
+                }*/
             >
                 <li>
                     <ul>
                         {ingredients.map((item) => (
                             <ListItem key={`item-${item.id}-${item.name}`}>
                                 <ListItemText primary={`${item.name}`} />
+                                <IconButton edge="end" aria-label="delete" onClick={() => editIngredient(item.id)}>
+                                    <EditIcon />
+                                </IconButton>
                                 <IconButton edge="end" aria-label="delete" onClick={() => deleteteIngredient(item.id)}>
                                     <DeleteIcon />
                                 </IconButton>

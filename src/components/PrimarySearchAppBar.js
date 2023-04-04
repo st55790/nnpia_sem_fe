@@ -52,10 +52,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar({onSearch}) {
+
+    const [searchTerm, setSearchTerm] = React.useState("");
+
+    const handleInputChange = (event) => {
+        const value = event.target.value;
+        setSearchTerm(value);
+        onSearch(value);
+        console.log(value);
+    }
+
 
     const [isLogin, setIsLogin] = React.useState(true);
-
 
     React.useEffect(() => {
         if (localStorage.getItem("jwt") === null) setIsLogin(false)
@@ -64,26 +73,18 @@ export default function PrimarySearchAppBar() {
     const buttonText = isLogin ? <a style={{ textDecoration: 'none' }} href='/'>Log Out</a> : <a style={{ textDecoration: 'none' }} href='/signin'>Log In</a>;
 
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
     const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleMobileMenuClose = () => {
-        setMobileMoreAnchorEl(null);
-    };
-
     const handleMenuClose = () => {
         setAnchorEl(null);
-        handleMobileMenuClose();
     };
 
     function handleMenuProfile() {
-        console.log("dadas");
         handleMenuClose();
     }
 
@@ -91,10 +92,6 @@ export default function PrimarySearchAppBar() {
         handleMenuClose();
         localStorage.clear();
     }
-
-    const handleMobileMenuOpen = (event) => {
-        setMobileMoreAnchorEl(event.currentTarget);
-    };
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -118,27 +115,6 @@ export default function PrimarySearchAppBar() {
         </Menu>
     );
 
-    const mobileMenuId = 'primary-search-account-menu-mobile';
-    const renderMobileMenu = (
-        <Menu
-            anchorEl={mobileMoreAnchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            id={mobileMenuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isMobileMenuOpen}
-            onClose={handleMobileMenuClose}
-        >
-
-        </Menu>
-    );
-
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -149,8 +125,11 @@ export default function PrimarySearchAppBar() {
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
+                            fullWidth
+                            value={searchTerm}
                             placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
+                            inputProps={{ 'aria-label': 'search'}}
+                            onChange={handleInputChange}
                         />
                     </Search>
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -166,21 +145,8 @@ export default function PrimarySearchAppBar() {
                             <AccountCircle />
                         </IconButton>
                     </Box>
-                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </Box>
                 </Toolbar>
             </AppBar>
-            {renderMobileMenu}
             {renderMenu}
         </Box>
     );

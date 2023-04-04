@@ -4,32 +4,47 @@ import Container from "@mui/material/Container";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance/AxiosInstance";
-import { Grid, Rating, Typography } from "@mui/material";
+import { Grid, IconButton, Rating, Typography } from "@mui/material";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 export default function RecipeDetail() {
 
     const { id } = useParams();
     const [recipe, setRecipe] = useState(null);
+    const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
         axiosInstance.get(`/recipe/${id}`)
             .then(result => {
                 setRecipe(result.data);
-                console.log(result.data);
             }).catch(error => {
-                console.log(error);
                 window.location.replace("/wrong_request");
             })
+        if(localStorage.getItem("userId") !== null){
+            axiosInstance.get(`/recipe/${id}/${localStorage.getItem("userId")}`, {
+                headers: {
+                    'Authorization': localStorage.getItem("jwt")
+                }
+            })
+            .then(result => {
+                setIsFavorite(result.data);
+            })
+        }
     }, []);
 
-    const handleSubmit = (event) => {
-        console.log("");
-    };
+    function addToFavorite(params) {
+        console.log("ADD TO FAVORITE");
+        setIsFavorite(!isFavorite);
+    }
 
-
+    function removeFromFavorite(params) {
+        console.log("REMOVE FORM FAVORITE");
+        setIsFavorite(!isFavorite);
+    }
 
     return (
-        <Container component="main" maxWidth="sm">
+        <Container component="main" maxWidth="md" sx={{marginBottom: '5%'}}>
             <Box
                 sx={{
                     boxShadow: 3,
@@ -44,37 +59,47 @@ export default function RecipeDetail() {
             >
                 <Container>
                     {recipe !== null ? (
-                        <Grid container spacing={2}>
+                        <Grid container item xs={12}>
                             <Grid xs={8}>
-                                <Typography variant="h1">{recipe.name}</Typography>
+                                <Typography variant="h3">{recipe.name}</Typography>
                             </Grid>
-                            <Grid xs={4}>
-                                <Rating name="read-only" size="large" value={recipe.rating} readOnly />
+                            <Grid xs={3} sx={{ textAlign: 'right' }}>
+                                <Rating name="read-only" size="large" value={recipe.rating} readOnly/>
+                            </Grid>
+                            <Grid xs={1} sx={{ textAlign: 'right' }}>
+                                {isFavorite === true ? 
+                                    <FavoriteIcon sx={{ color: 'red', '&:hover': { color: 'lightcoral', transform: 'scale(1.3)' } }} fontSize="large" onClick={() => removeFromFavorite()}/>
+                                : 
+                                <FavoriteBorderIcon fontSize="large" onClick={()=> addToFavorite()}/>
+                                }
                             </Grid>
                             <Grid xs={6}>
-                                <Typography>Počet porcí: {recipe.numberOfPortions}</Typography>
+                                <Typography>Number of portions: {recipe.numberOfPortions}</Typography>
                             </Grid>
                             <Grid xs={6}>
-                                <Typography>Doba přípravy: {recipe.prepareTime}</Typography>
+                                <Typography>Preparation time (in min): {recipe.prepareTime}</Typography>
+                            </Grid>
+                            <Grid sx={{textAlign: 'center', margin: 'auto', my: '5%'}}>
+                                <img src={`.${recipe["linksToImages"]["0"]}` === null ? `.${recipe["linksToImages"]["0"]}` : '../img/defaultImage.jpg'} />
                             </Grid>
                             <Grid xs={6}>
-                                <Typography variant="h4">Category</Typography>
+                                <Typography variant="h4">Categories</Typography>
                                 <div>
-                                    {recipe.categories.map(element => (
-                                        <div>{element.name}</div>
+                                    {recipe.categories.map((element, index) => (
+                                        <div key={index}>{element.name}</div>
                                     ))}
                                 </div>  
                             </Grid>
                             <Grid xs={6}>
-                                <Typography variant="h4">Ingredience</Typography>
+                                <Typography variant="h4">Ingredients</Typography>
                                 <div>
-                                    {recipe.ingredients.map(element => (
-                                        <div>{element.name}</div>
+                                    {recipe.ingredients.map((element, index) => (
+                                        <div key={index}>{element.name}</div>
                                     ))}
                                 </div>  
                             </Grid>
-                            <Grid xs={12}>
-                                <Typography variant="h5">Postup</Typography>
+                            <Grid xs={12} sx={{my: '2%'}}>
+                                <Typography variant="h5">Preparation procedure</Typography>
                                 <Typography>{recipe.procedure}</Typography>
                             </Grid>
                         </Grid>

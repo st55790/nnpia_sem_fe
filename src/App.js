@@ -11,21 +11,19 @@ import WrongAddress from './components/alert/WrongAddress';
 import { Fullscreen } from '@mui/icons-material';
 import Ingredients from './components/Ingredients';
 import Categories from './components/Categories';
+import { useState } from 'react';
 
 function App() {
 
-  const styles = {
-    paperContainer: {
-        backgroundImage: `url(${"./img/burger.jpg"})`,
-        width: '100%',
-        opacity: '0.2'
+  const [searchTerm, setSearchTerm] = useState("");
 
-    }
-  };
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+  }
 
   return (
     <div>
-      <PrimarySerachAppBar/>
+      <PrimarySerachAppBar onSearch={handleSearch}/>
       <Router>
         <Routes>
           <Route path="/signup" element={<SignUp />} />
@@ -35,7 +33,7 @@ function App() {
           <Route path='/addRecipe' element={<AddRecipe/>}/>
           <Route path='/ingredients' element={<Ingredients/>} />
           <Route path='/categories' element={<Categories/>} />
-          <Route path="/" element={<RecipesPage/>} />
+          <Route path="/" element={<RecipesPage searchTerm={searchTerm}/>} />
           <Route path="*" element={<WrongAddress/>} />
         </Routes>
       </Router>

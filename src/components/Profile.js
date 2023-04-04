@@ -50,8 +50,6 @@ export default function Profile() {
     const [secondary, setSecondary] = React.useState(false);
 
     function handleDeleteRecipe(recipeId){
-        console.log("DELETE RECIPE " + recipeId);
-
         axiosInstance.delete(`/recipe/${recipeId}`, {
             headers: {
                 'Authorization': localStorage.getItem("jwt")

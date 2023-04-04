@@ -68,9 +68,8 @@ export default function AddRecipe() {
             
 
             
-        }).then(response => {
-            // zpracování odpovědi
-        }).catch(error => {
+        }).then(window.location.reload(false))
+        .catch(error => {
             // zpracování chyby
         });
     }
