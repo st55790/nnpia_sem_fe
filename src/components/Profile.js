@@ -76,12 +76,12 @@ export default function Profile() {
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={6}>
                     <Item sx={{ background: '#3b8ad9', cursor: 'pointer' }}>
-                        <Typography>Moje recepty</Typography>
+                        <Typography>My recipes</Typography>
                     </Item>
                 </Grid>
                 <Grid item xs={6}>
                     <Item sx={{ background: '#3b8ad9' }}>
-                        <Typography>Oblíbené recepty</Typography>
+                        <Typography>Favorite recipes</Typography>
                     </Item>
                 </Grid>
                 <Grid item xs={6}>
@@ -102,7 +102,7 @@ export default function Profile() {
                                         }
                                     >
                                         <ListItemText
-                                            primary={`ID: ${recipe.id}: name: ${recipe.name}`}
+                                            primary={recipe.name}
                                             secondary={secondary ? 'Secondary text' : null}
                                         />
                                     </ListItem>
@@ -129,7 +129,7 @@ export default function Profile() {
                                         }
                                     >
                                         <ListItemText
-                                            primary={`ID: ${recipe.id}: name: ${recipe.name}`}
+                                            primary={recipe.name}
                                             secondary={secondary ? 'Secondary text' : null}
                                         />
                                     </ListItem>

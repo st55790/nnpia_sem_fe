@@ -34,13 +34,38 @@ export default function RecipeDetail() {
     }, []);
 
     function addToFavorite(params) {
-        console.log("ADD TO FAVORITE");
-        setIsFavorite(!isFavorite);
+        if (localStorage.getItem("userId") !== null) {
+
+            axiosInstance.post(`/recipe/${recipe.id}/${localStorage.getItem("userId")}`, {}, {
+                headers: {
+                    'Authorization': localStorage.getItem("jwt")
+                }
+            }).then(result => {
+                setIsFavorite(!isFavorite);
+            });
+
+            //window.location.reload(true);
+        } else {
+            console.log("YOU MUST LOGIN");
+        }
+
     }
 
     function removeFromFavorite(params) {
-        console.log("REMOVE FORM FAVORITE");
-        setIsFavorite(!isFavorite);
+        if(localStorage.getItem("userId") !== null){
+
+            axiosInstance.delete(`/recipe/${recipe.id}/${localStorage.getItem("userId")}`,{
+                headers: {
+                    'Authorization': localStorage.getItem("jwt")
+                }
+            }).then(result => {
+                setIsFavorite(!isFavorite);
+            });
+
+            //window.location.reload(true);
+        }else{
+            console.log("YOU MUST LOGIN");
+        }
     }
 
     return (
@@ -60,29 +85,29 @@ export default function RecipeDetail() {
                 <Container>
                     {recipe !== null ? (
                         <Grid container item xs={12}>
-                            <Grid xs={8}>
+                            <Grid item xs={8}>
                                 <Typography variant="h3">{recipe.name}</Typography>
                             </Grid>
-                            <Grid xs={3} sx={{ textAlign: 'right' }}>
+                            <Grid item xs={3} sx={{ textAlign: 'right' }}>
                                 <Rating name="read-only" size="large" value={recipe.rating} readOnly/>
                             </Grid>
-                            <Grid xs={1} sx={{ textAlign: 'right' }}>
+                            <Grid item xs={1} sx={{ textAlign: 'right' }}>
                                 {isFavorite === true ? 
                                     <FavoriteIcon sx={{ color: 'red', '&:hover': { color: 'lightcoral', transform: 'scale(1.3)' } }} fontSize="large" onClick={() => removeFromFavorite()}/>
                                 : 
                                 <FavoriteBorderIcon fontSize="large" onClick={()=> addToFavorite()}/>
                                 }
                             </Grid>
-                            <Grid xs={6}>
+                            <Grid item xs={6}>
                                 <Typography>Number of portions: {recipe.numberOfPortions}</Typography>
                             </Grid>
-                            <Grid xs={6}>
+                            <Grid item xs={6}>
                                 <Typography>Preparation time (in min): {recipe.prepareTime}</Typography>
                             </Grid>
-                            <Grid sx={{textAlign: 'center', margin: 'auto', my: '5%'}}>
-                                <img src={`.${recipe["linksToImages"]["0"]}` === null ? `.${recipe["linksToImages"]["0"]}` : '../img/defaultImage.jpg'} />
+                            <Grid item sx={{textAlign: 'center', margin: 'auto', my: '5%'}}>
+                                <img width={'60%'} height={'auto'} src={`.${recipe["linksToImages"]["0"]}` !== null ? `.${recipe["linksToImages"]["0"]}` : '../img/defaultImage.jpg'} />
                             </Grid>
-                            <Grid xs={6}>
+                            <Grid item xs={6}>
                                 <Typography variant="h4">Categories</Typography>
                                 <div>
                                     {recipe.categories.map((element, index) => (
@@ -90,7 +115,7 @@ export default function RecipeDetail() {
                                     ))}
                                 </div>  
                             </Grid>
-                            <Grid xs={6}>
+                            <Grid item xs={6}>
                                 <Typography variant="h4">Ingredients</Typography>
                                 <div>
                                     {recipe.ingredients.map((element, index) => (
@@ -98,7 +123,7 @@ export default function RecipeDetail() {
                                     ))}
                                 </div>  
                             </Grid>
-                            <Grid xs={12} sx={{my: '2%'}}>
+                            <Grid item xs={12} sx={{my: '2%'}}>
                                 <Typography variant="h5">Preparation procedure</Typography>
                                 <Typography>{recipe.procedure}</Typography>
                             </Grid>

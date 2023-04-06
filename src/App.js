@@ -12,6 +12,7 @@ import { Fullscreen } from '@mui/icons-material';
 import Ingredients from './components/Ingredients';
 import Categories from './components/Categories';
 import { useState } from 'react';
+import PrivateRoute from './PrivateRoute/PrivateRoute';
 
 function App() {
 
@@ -28,11 +29,11 @@ function App() {
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
           <Route path="/recipe/:id" element={<RecipeDetail/>} />
-          <Route path='/addRecipe' element={<AddRecipe/>}/>
-          <Route path='/ingredients' element={<Ingredients/>} />
-          <Route path='/categories' element={<Categories/>} />
+          <Route path='/addRecipe' element={<PrivateRoute><AddRecipe /></PrivateRoute>}/>
+          <Route path='/ingredients' element={<PrivateRoute><Ingredients /></PrivateRoute>} />
+          <Route path='/categories' element={<PrivateRoute><Categories /></PrivateRoute>} />
           <Route path="/" element={<RecipesPage searchTerm={searchTerm}/>} />
           <Route path="*" element={<WrongAddress/>} />
         </Routes>
