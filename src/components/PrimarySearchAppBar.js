@@ -55,6 +55,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar({onSearch}) {
 
     const [searchTerm, setSearchTerm] = React.useState("");
+    const [isAdmin, setIsAdmin] = React.useState(false);
 
     const handleInputChange = (event) => {
         const value = event.target.value;
@@ -68,6 +69,8 @@ export default function PrimarySearchAppBar({onSearch}) {
 
     React.useEffect(() => {
         if (localStorage.getItem("jwt") === null) setIsLogin(false)
+
+        if (localStorage.getItem("roles") !== null && localStorage.getItem("roles").includes("ROLE_ADMIN")) setIsAdmin(true);
     }, []);
 
     const buttonText = isLogin ? <a style={{ textDecoration: 'none' }} href='/'>Log Out</a> : <a style={{ textDecoration: 'none' }} href='/signin'>Log In</a>;
@@ -111,6 +114,8 @@ export default function PrimarySearchAppBar({onSearch}) {
             onClose={handleMenuClose}
         >
             {isLogin && <MenuItem onClick={handleMenuProfile}><a style={{ textDecoration: 'none' }} href='/profile'>Profile</a></MenuItem>}
+            {isAdmin && <MenuItem onClick={handleMenuProfile}><a style={{ textDecoration: 'none' }} href='/categories'>Category</a></MenuItem>}
+            {isAdmin && <MenuItem onClick={handleMenuProfile}><a style={{ textDecoration: 'none' }} href='/ingredients'>Ingredients</a></MenuItem>}
             <MenuItem href='/signup' onClick={handleMenuLogout}>{buttonText}</MenuItem>
         </Menu>
     );
@@ -132,7 +137,7 @@ export default function PrimarySearchAppBar({onSearch}) {
                             onChange={handleInputChange}
                         />
                     </Search>
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    <Box sx={{ display: { md: 'flex' } }}>
                         <IconButton
                             size="large"
                             edge="end"

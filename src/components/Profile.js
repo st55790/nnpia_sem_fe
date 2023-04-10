@@ -9,6 +9,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useEffect } from "react";
 import axiosInstance from "../axiosInstance/AxiosInstance";
 import { useState } from "react";
+import EditIcon from '@mui/icons-material/Edit';
 
 
 
@@ -92,6 +93,9 @@ export default function Profile() {
                                     <ListItem key={index}
                                         secondaryAction={
                                             <Container>
+                                                <IconButton href={`/addRecipe/${recipe.id}`}>
+                                                    <EditIcon />
+                                                </IconButton>
                                                 <IconButton href={`/recipe/${recipe.id}`}>
                                                     <VisibilityIcon />
                                                 </IconButton>

@@ -69,7 +69,7 @@ export default function Categories() {
     return (
         <Container sx={{ mt: '5%' }}>
             <Typography variant="h3">
-                Category
+                Categories
             </Typography>
             <TextField
                 margin="normal"

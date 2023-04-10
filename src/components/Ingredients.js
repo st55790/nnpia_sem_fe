@@ -70,7 +70,7 @@ export default function Ingredients() {
     return (
         <Container sx={{ mt: '5%' }}>
             <Typography variant="h3">
-                Ingredience
+                Ingredients
             </Typography>
             <TextField
                 margin="normal"
@@ -78,7 +78,7 @@ export default function Ingredients() {
                 fullWidth
                 id="name"
                 value={name}
-                label="Název ingredience"
+                label="Ingredient name"
                 name="name"
                 onChange={(event) => setName(event.target.value)}
                 InputProps={{
@@ -111,13 +111,6 @@ export default function Ingredients() {
                     '& ul': { padding: 0 },
                     boxShadow: 2
                 }}
-                /*subheader={
-                    <ListSubheader component="div" id="nested-list-subheader">
-                        <TextField
-                            fullWidth
-                        />
-                    </ListSubheader>
-                }*/
             >
                 <li>
                     <ul>

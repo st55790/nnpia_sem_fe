@@ -1,70 +1,39 @@
-# Getting Started with Create React App
+# Receptář - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Aplikace slouží pro účely semestrální práce pro předmět NNPIA. Semestrální práce se skládá ze dvou částí.
+Tato část slouží jako frontend pro aplikaci, která má sloužit jako jakýsi receptář. Aplikace by měla umožnit
+uživatelům vyhledávat recepty. Registrovaní a přihlášení uživatelé mají možnost přidávat nové recepty a
+a také si je přidávat mezi své oblíbené recepty.
 
-## Available Scripts
+## Instalace
 
-In the project directory, you can run:
+Dle zadání semestrální práce nebylo nutné nahrávat aplikaci na žádný server a proto aplikace běží jen lokálně. Ke spuštění je potřeba spustit docker container s databází, backend a frontend.
 
-### `npm start`
+## Příklady
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Několik příkladů, jak aplikace funguje.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Formulář k přihlášení, který vyžaduje uživatelské jméno a heslo. Po správném zadání přesměruje na domovskou stránku.
+![Logo](./readmeFiles/signin.png)
 
-### `npm test`
+Registrační formulář.
+![Logo](./readmeFiles/signup.png)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Domovská stránka, která obashuje horní panel pro vyhledávání, domovské tlačítko nalevo a na pravé straně obashuje rozklikávací menu, které nabízí dle oprávnění volby.
+Admin má možnost spravovat kategorie a ingredience. Běžný uživatel má poté přístip k profilu. Tam najde své přidané recepty a recepty, které si přidal mezi oblíbené, také pod touto položkou může přidívat nové recepty. Hlavní stránka tedy obsahuje možnost vyhledávání dle názvu, řazení dle jména nebo hodnocení vzestupně, či sestupně. Lze také tyto dvě možnosti kombinovat.
+![Logo](./readmeFiles/home_page.png)
 
-### `npm run build`
+Detail receptu obsahuje vlastnosti, se kterými byl recept vytvořen.
+![Logo](./readmeFiles/recipe_detail.png)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Formulář pro přidání nového receptu.
+![Logo](./readmeFiles/add_recipe.png)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Správa kategorií. Nabízí přidání nové kategorie, smazání existující a editaci již existující.
+![Logo](./readmeFiles/categories.png)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Správa ingrediencí. Nabízí přidání nové ingredience, smazání existující a editaci již existující.
+![Logo](./readmeFiles/ingredients.png)
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Stránka profilu, která umožňuje zobrazit přidané recepty, oblíbené, tak tlačítko na přidání nového, které přesměruje uživatele na formulář pro přidání receptu.
+![Logo](./readmeFiles/profile_page.png)

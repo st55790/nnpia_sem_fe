@@ -104,7 +104,7 @@ export default function RecipeDetail() {
                             <Grid item xs={6}>
                                 <Typography>Preparation time (in min): {recipe.prepareTime}</Typography>
                             </Grid>
-                            <Grid item sx={{textAlign: 'center', margin: 'auto', my: '5%'}}>
+                            <Grid item xs={12} sx={{textAlign: 'center', margin: 'auto', my: '5%'}}>
                                 <img width={'60%'} height={'auto'} src={`.${recipe["linksToImages"]["0"]}` !== null ? `.${recipe["linksToImages"]["0"]}` : '../img/defaultImage.jpg'} />
                             </Grid>
                             <Grid item xs={6}>

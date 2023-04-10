@@ -4,11 +4,23 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance/AxiosInstance";
+import { useParams } from "react-router-dom";
 
 export default function AddRecipe() {
     
+    const { id } = useParams();
     const [category, setCategory] = useState([]);
     const [ingredients, setIngredients] = useState([]);
+
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [process, setProcess] = useState("");
+    const [numOfPortions, setNumOfPortions] = useState(0);
+    const [prepareTime, setPrepareTime] = useState(0);
+    const [rating, setRating] = useState(0);
+
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [selectedIngredients, setSelectedIngredients] = useState([]);
 
     useEffect(() => {
         axiosInstance.get("/category")
@@ -21,10 +33,23 @@ export default function AddRecipe() {
             setIngredients(response.data);
         });
 
-    }, []);
+        if (id) {
+            console.log("EDIT")
+            axiosInstance.get("/recipe/" + id)
+            .then(response =>{
+                console.log(response.data);
+                setName(response.data.name);
+                setDescription(response.data.description);
+                setProcess(response.data.procedure);
+                setNumOfPortions(response.data.numberOfPortions);
+                setSelectedIngredients(response.data.ingredients);
+                setSelectedCategories(response.data.categories);
+                setRating(response.data.rating);
+                setPrepareTime(response.data.prepareTime)
+            })
+        }
 
-    const [selectedCategories, setSelectedCategories] = useState([]);
-    const [selectedIngredients, setSelectedIngredients] = useState([]);
+    }, []);
 
     const handleSubmit = (event) =>{
         console.log("Create recipe");
@@ -38,7 +63,7 @@ export default function AddRecipe() {
         try{
             selectedFile = document.getElementById("uploadFile").files[0];
         }catch(error){
-            console.log(error)
+            console.log("FILE WAS NOT SET!")
         }
 
         let filename = './img/';
@@ -48,30 +73,59 @@ export default function AddRecipe() {
             filename += selectedFile.name;
         }
 
-        axiosInstance.post("/recipe", {
+
+        if(id){
+            console.log("EDIT")
+            axiosInstance.put("/recipe/" + localStorage.getItem("userId"), {
+                id: id,
                 name: data.get("recipeName"),
                 description: data.get("description"),
                 procedure: data.get("process"),
                 prepareTime: data.get("prepareTime"),
                 numberOfPortions: data.get("numberOfPortion"),
-                rating: 0,
+                rating: rating,
                 owner: localStorage.getItem("userId"),
                 linksToImages: [filename],
                 ingredients: selectedIngredients,
                 categories: selectedCategories
-            },{
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': token
-            },
-            
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': token
+                },
 
-            
-        }).then(window.location.reload(false))
-        .catch(error => {
-            // zpracování chyby
-        });
+            })
+            .then()
+            .catch(error => {
+                // zpracování chyby
+            });
+        }else{
+            console.log("ADD")
+            axiosInstance.post("/recipe", {
+                    name: data.get("recipeName"),
+                    description: data.get("description"),
+                    procedure: data.get("process"),
+                    prepareTime: data.get("prepareTime"),
+                    numberOfPortions: data.get("numberOfPortion"),
+                    rating: 0,
+                    owner: localStorage.getItem("userId"),
+                    linksToImages: [filename],
+                    ingredients: selectedIngredients,
+                    categories: selectedCategories
+                },{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': token
+                },
+                   
+            })
+            .then()
+            .catch(error => {
+                // zpracování chyby
+            });
+        }
     }
 
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
@@ -92,7 +146,7 @@ export default function AddRecipe() {
                 }}
             >
                 <Typography component="h1" variant="h5">
-                    Add recipe
+                    {id ? 'Edit recipe' : 'Add recipe'}
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                     <TextField
@@ -102,6 +156,8 @@ export default function AddRecipe() {
                         id="name"
                         label="Recipe name"
                         name="recipeName"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                     />
                     <TextField
                         margin="normal"
@@ -110,6 +166,8 @@ export default function AddRecipe() {
                         name="description"
                         label="Description"
                         id="desciption"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
                     />
                     <TextField
                         margin="normal"
@@ -121,11 +179,28 @@ export default function AddRecipe() {
                         placeholder="Placeholder"
                         rows={8}
                         multiline
+                        value={process}
+                        onChange={(e) => setProcess(e.target.value)}
                         />
-                    <TextField type={"number"} fullWidth margin="normal" label="Number of portion" name="numberOfPortion"
-                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 0 }} />
-                    <TextField type={"number"} fullWidth margin="normal" label="Prepare time" name="prepareTime"
-                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 0 }} />
+                    <TextField 
+                        type={"number"} 
+                        fullWidth margin="normal" 
+                        label="Number of portion" 
+                        name="numberOfPortion"
+                        value={numOfPortions}
+                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 0 }}
+                        onChange={(e) => setNumOfPortions(e.target.value)} 
+                        />
+                    <TextField 
+                        type={"number"} 
+                        fullWidth 
+                        margin="normal" 
+                        label="Prepare time" 
+                        name="prepareTime"
+                        value={prepareTime}
+                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 0 }} 
+                        onChange={(e) => setPrepareTime(e.target.value)} 
+                        />
                     <Autocomplete
                         value={selectedCategories}
                         sx={{my: 2}}
